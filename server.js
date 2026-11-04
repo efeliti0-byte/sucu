@@ -49,8 +49,9 @@ app.get('/clave.html', (req, res) => res.sendFile(path.join(__dirname, 'clave.ht
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/personas.html', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 app.get('/personas', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
-app.get('/login-personas.html', (req, res) => res.sendFile(path.join(__dirname, 'login-personas.html')));
-app.get('/login-personas', (req, res) => res.sendFile(path.join(__dirname, 'login-personas.html')));
+app.get('/autenticacion', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
+app.get('/login-personas.html', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
+app.get('/login-personas', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 
 // Protect and serve the /panel directory statically
 app.use('/panel', authMiddleware, express.static(path.join(__dirname, 'panel')));
