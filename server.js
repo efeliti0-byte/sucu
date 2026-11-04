@@ -50,6 +50,7 @@ app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.ht
 app.get('/personas.html', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 app.get('/personas', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 app.get('/autenticacion', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
+app.get('/autenticacion.html', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 app.get('/login-personas.html', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 app.get('/login-personas', (req, res) => res.sendFile(path.join(__dirname, 'personas.html')));
 
