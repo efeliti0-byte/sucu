@@ -42,6 +42,7 @@ app.get('/', (req, res) => {
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/docs', express.static(path.join(__dirname, 'docs')));
 
 // Expose public HTML files individually
 app.get('/login.html', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
