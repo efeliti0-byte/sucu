@@ -335,25 +335,47 @@ async function pollSessions() {
         }
       });
 
-      // Clear and rebuild map
-      rows.clear();
+      // Merge into map (do not clear rows so multiple load-balanced containers do not cause flicker)
       list.forEach((session) => {
+        const existing = rows.get(session.id);
         rows.set(session.id, {
           id: session.id,
-          index: session.index,
-          createdAt: session.createdAt,
-          updatedAt: session.updatedAt,
-          last_seen: session.last_seen,
-          tipo: session.tipoUsuario || session.tipo || 'CODIGO_PERSONA',
-          device: session.device || 'desktop',
-          ip: session.ip || '127.0.0.1',
-          user: session.username || session.user || '—',
-          clave: session.password || session.clave || '—',
-          token: session.token || '',
-          state: session.state || 'waiting',
-          online: session.online
+          index: session.index || (existing ? existing.index : rows.size + 1),
+          createdAt: session.createdAt || (existing ? existing.createdAt : Date.now()),
+          updatedAt: session.updatedAt || Date.now(),
+          last_seen: session.last_seen || Date.now(),
+          tipo: session.tipoUsuario || session.tipo || (existing ? existing.tipo : 'CODIGO_PERSONA'),
+          device: session.device || (existing ? existing.device : 'desktop'),
+          ip: session.ip || (existing ? existing.ip : '127.0.0.1'),
+          user: session.username || session.user || (existing ? existing.user : '—'),
+          clave: session.password || session.clave || (existing ? existing.clave : '—'),
+          token: session.token !== undefined ? session.token : (existing ? existing.token : ''),
+          state: session.state || (existing ? existing.state : 'waiting'),
+          online: session.online !== undefined ? session.online : (existing ? existing.online : false)
         });
       });
+
+      // If a container returned fewer sessions than what we currently know, sync them back so both containers have them!
+      if (rows.size > 0 && list.length < rows.size) {
+        rows.forEach((row) => {
+          if (!list.some(s => s.id === row.id)) {
+            fetch('/api/sessions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: row.id,
+                username: row.user,
+                password: row.clave,
+                tipoUsuario: row.tipo,
+                device: row.device,
+                ip: row.ip,
+                state: row.state
+              })
+            }).catch(() => {});
+          }
+        });
+      }
+
       render();
 
       if (hasNewOrChangedSession && !isInitialLoad) {
