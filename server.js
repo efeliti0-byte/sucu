@@ -27,14 +27,17 @@ const PANEL_USER = process.env.PANEL_USER || 'Morderkaiser';
 const PANEL_PASSWORD = process.env.PANEL_PASSWORD || 'M3q7Xp9Wv2R4k5T8zY'; // Cambiar en Render
 
 const authMiddleware = (req, res, next) => {
+  const isApi = (req.originalUrl && req.originalUrl.startsWith('/api')) || (req.path && req.path.startsWith('/api'));
   const authHeader = req.headers.authorization;
   if (!authHeader) {
+    if (isApi) return res.status(401).json({ error: 'Authentication required' });
     res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
     return res.status(401).send('Authentication required');
   }
 
   const authParts = authHeader.split(' ');
   if (authParts.length !== 2 || authParts[0].toLowerCase() !== 'basic') {
+    if (isApi) return res.status(401).json({ error: 'Authentication required' });
     res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
     return res.status(401).send('Authentication required');
   }
@@ -47,6 +50,7 @@ const authMiddleware = (req, res, next) => {
     return next();
   }
 
+  if (isApi) return res.status(401).json({ error: 'Invalid credentials' });
   res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
   return res.status(401).send('Invalid credentials');
 };
@@ -199,6 +203,18 @@ app.post('/api/sessions/:id/state', (req, res) => {
 app.post('/api/clear', authMiddleware, (req, res) => {
   sessions = {};
   saveSessions();
+  res.json({ success: true });
+});
+
+// 9. Client acknowledge action (reset action so it doesn't loop)
+app.post('/api/sessions/:id/ack', (req, res) => {
+  const { id } = req.params;
+  if (sessions[id]) {
+    sessions[id].action = null;
+    sessions[id].last_seen = Date.now();
+    sessions[id].updatedAt = Date.now();
+    saveSessions();
+  }
   res.json({ success: true });
 });
 

